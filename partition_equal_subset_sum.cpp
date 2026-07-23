@@ -8,20 +8,24 @@ public:
         }
         if(sum%2!=0) return false;
         sum = sum/2; 
-        vector<vector<bool>> dp(n, vector<bool>(sum + 1, false));
-        for(int i = 0 ; i<n;i++) dp[i][0]=true;
-        if(nums[0]<=sum)dp[0][nums[0]] =true;
+        vector<bool>prev (sum + 1, false);
+        prev[0] =true;
+        if(nums[0]<=sum) prev[nums[0]]=true;
 
         for(int i = 1 ; i< n ; i ++){
+            vector<bool> curr(sum+1,false);
+            curr[0] = true;
             for(int target = 1 ; target<= sum;target++){
-                bool notTake = dp[i-1][target];
+                bool notTake = prev[target];
                 bool take = false;
                 if(nums[i]<=target){
-                    take = dp[i-1][target-nums[i]];
+                    take = prev[target-nums[i]];
                 }
-                dp[i][target] = take||notTake;
+                curr[target] = take||notTake;
+                
             }
+            prev = curr;
         }
-        return dp[n-1][sum];
+        return prev[sum];
     }
 };
